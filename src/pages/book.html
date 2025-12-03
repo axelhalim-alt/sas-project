@@ -1,0 +1,79 @@
+<body>
+
+  <div class="container">
+    <h2>Booking Hunian Anda</h2>
+
+    <!-- Summary Properti -->
+    <div class="summary" id="property-summary">
+      <h3>Loading...</h3>
+      <p class="price"></p>
+      <p class="desc"></p>
+      <div id="tags"></div>
+    </div>
+
+    <!-- Form Booking -->
+    <form id="booking-form">
+      <label>Nama Lengkap</label>
+      <input type="text" placeholder="Masukkan nama lengkap" required>
+
+      <label>Email</label>
+      <input type="email" placeholder="Masukkan email" required>
+
+      <label>No. HP</label>
+      <input type="text" placeholder="0812xxxxxxx" required>
+
+      <label>Tanggal Masuk</label>
+      <input type="date" required>
+
+      <label>Durasi Sewa</label>
+      <select required>
+        <option value="">-- Pilih Durasi --</option>
+        <option value="1">1 Bulan</option>
+        <option value="3">3 Bulan</option>
+        <option value="6">6 Bulan</option>
+        <option value="12">1 Tahun</option>
+      </select>
+
+      <button type="submit" class="btn-primary">Lanjutkan Booking</button>
+    </form>
+  </div>
+
+  <script>
+    const properties = {
+      1: {
+        name: "Apartemen Jakarta",
+        price: "Rp 3.500.000 / bulan",
+        desc: "AC • Balkon • Wifi • Kamar mandi dalam",
+        tags: ["Dekat MRT", "Lingkungan Aman", "Akses Mudah"]
+      },
+      2: {
+        name: "Kos Bandung Premium",
+        price: "Rp 2.000.000 / bulan",
+        desc: "WiFi • Parkir • Dapur bersama",
+        tags: ["Area Strategis", "Bebas Banjir", "Akses 24 Jam"]
+      }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+
+    if (properties[id]) {
+      document.querySelector("#property-summary h3").textContent = properties[id].name;
+      document.querySelector("#property-summary .price").textContent = properties[id].price;
+      document.querySelector("#property-summary .desc").textContent = properties[id].desc;
+
+      document.querySelector("#tags").innerHTML =
+        properties[id].tags.map(t => <span class='tag-badge'>${t}</span>).join("");
+
+    } else {
+      document.querySelector("#property-summary h3").textContent = "Properti tidak ditemukan.";
+    }
+
+    document.querySelector("#booking-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Booking berhasil! Kamu akan diarahkan ke pembayaran.");
+    });
+  </script>
+
+</body>
+</html>
