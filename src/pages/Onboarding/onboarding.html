@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RentHub</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="onboarding.css" />
+</head>
+
+<body>
+  <img src="/logo.png" class="footer-logo">
+<!-- LOADING SCREEN -->
+<div id="loader" class="loader-wrapper">
+    <div class="loader">
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<!-- ONBOARDING CONTENT -->
+<div class="onboard-wrapper" id="onboardRoot" aria-hidden="true">
+
+    <!-- TOP BAR -->
+    <div class="top-controls">
+        <div class="brand">
+            <div class="logo">RH</div>
+            <div class="brand-text">
+                <strong>RentHub</strong>
+                <small>Sewa rumah • Apartemen • Kos</small>
+            </div>
+        </div>
+
+        <div class="control-buttons">
+            <button id="soundToggle" class="icon-btn">🔊</button>
+            <button id="themeToggle" class="icon-btn">🌓</button>
+        </div>
+    </div>
+
+    <!-- SLIDER -->
+    <div class="viewport" id="viewport">
+        <div class="slider" id="slider">
+
+            <!-- Slide 1 -->
+            <section class="slide" data-index="0">
+                <div class="image-wrap" data-parallax>
+                    <div class="img-bg" style="background-image:url('/on1.png');"></div>
+                    <div class="img-fg" style="background-image:url('/on1.png');"></div>
+                </div>
+                <h1>Temukan Hunian Impianmu</h1>
+                <p>Pilih kost, apartemen, atau rumah dengan cepat dan mudah.</p>
+                <small class="hint">Geser ↔ untuk melanjutkan</small>
+            </section>
+
+            <!-- Slide 2 -->
+            <section class="slide" data-index="1">
+                <div class="image-wrap" data-parallax>
+                    <div class="img-bg" style="background-image:url('/on2.png');"></div>
+                    <div class="img-fg" style="background-image:url('/on2.png');"></div>
+                </div>
+                <h1>Filter Cerdas & Akurat</h1>
+                <p>Sesuaikan harga, lokasi, fasilitas, dan tipe properti.</p>
+                <small class="hint">Tekan titik untuk pindah slide</small>
+            </section>
+
+            <!-- Slide 3 -->
+            <section class="slide" data-index="2">
+                <div class="image-wrap" data-parallax>
+                    <div class="img-bg" style="background-image:url('/on3.png');"></div>
+                    <div class="img-fg" style="background-image:url('/on3.png');"></div>
+                </div>
+                <h1>Booking Mudah & Aman</h1>
+                <p>Pesan hunian, bayar, dan konfirmasi semua dalam satu halaman.</p>
+                <small class="hint">Tekan Get Started →</small>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- DOTS -->
+    <div class="dots" id="dots">
+        <div class="dot active" data-index="0"></div>
+        <div class="dot" data-index="1"></div>
+        <div class="dot" data-index="2"></div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-wrap">
+        <button id="btnStart" class="btn-start">Get Started</button>
+    </div>
+
+</div>
+
+<!-- AUDIO -->
+<audio id="chime" preload="auto">
+    <source src="/audio.mp3" type="audio/mpeg" />
+</audio>
+
+<!-- Script -->
+<script src="onboarding.js"></script>
+
+</body>
+</html>

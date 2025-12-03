@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RentHub</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    *{box-sizing:border-box}body{margin:0;font-family:Inter;background:#f6f8fb;color:#0f1724}
+
+    :root{
+      --card:#ffffff;
+      --accent:#ff5a5f;
+      --muted:#64748b;
+    }
+
+    .nav{position:sticky;top:0;background:#ffffffaa;backdrop-filter:blur(6px);padding:16px 22px;display:flex;justify-content:space-between}
+    .logo{background:var(--accent);width:46px;height:46px;border-radius:12px;color:white;display:flex;justify-content:center;align-items:center;font-weight:700}
+
+    .container{max-width:1100px;margin:20px auto;padding:0 20px}
+
+    .search-card{display:flex;background:var(--card);padding:14px;border-radius:16px;gap:10px;box-shadow:0 10px 25px rgba(0,0,0,0.07)}
+    .search-input{flex:1;padding:12px;border-radius:12px;border:1px solid #ddd}
+
+    .filters{display:flex;gap:10px;margin-top:14px}
+    .filter-card{background:var(--card);padding:10px;border-radius:12px}
+
+    .list-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:18px}
+    .card{background:var(--card);border-radius:14px;overflow:hidden;cursor:pointer;box-shadow:0 12px 28px rgba(0,0,0,0.08);transition:.3s}
+    .card:hover{transform:translateY(-6px)}
+    .card img{width:100%;height:160px;object-fit:cover}
+    .card-body{padding:12px}
+
+    /* PANEL */
+    .panel{position:fixed;inset:0;background:#0008;display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:.3s}
+    .panel.open{opacity:1;pointer-events:auto}
+    .panel-card{background:white;border-radius:14px;width:900px;max-width:95%;display:grid;grid-template-columns:1fr 330px;overflow:hidden}
+    .panel-right{padding:18px}
+    .tag{background:#ffe7e8;padding:6px 8px;border-radius:8px;font-size:12px;color:var(--accent)}
+
+    .footer-logo {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 60px;
+  opacity: 0.9;
+  z-index: 999;
+}
+
+  </style>
+</head>
+
+<body>
+
+  <img src="/logo.png" class="footer-logo">
+
+<nav class="nav">
+  <div class="logo">RH</div>
+  <div style="font-weight:600">RentHub</div>
+</nav>
+
+
+<div class="container">
+
+
+  <div class="search-card">
+    <input id="search" class="search-input" placeholder="Cari properti..." />
+    <button id="searchBtn" style="padding:10px 14px;border:none;background:var(--accent);color:white;border-radius:10px">Cari</button>
+  </div>
+
+
+  <div class="filters">
+    <div class="filter-card">
+      <label>Harga Max</label><br>
+      <input id="price" type="range" min="500000" max="10000000" value="5000000" />
+    </div>
+
+    <div class="filter-card">
+      <label>Kota</label><br>
+      <select id="city">
+        <option value="all">Semua</option>
+        <option value="jakarta">Jakarta</option>
+        <option value="bandung">Bandung</option>
+        <option value="surabaya">Surabaya</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="filter-card">
+  <label>Jenis</label><br>
+  <select id="type">
+    <option value="all">Semua</option>
+    <option value="kos">Kos</option>
+    <option value="apartemen">Apartemen</option>
+    <option value="rumah">Rumah</option>
+  </select>
+</div>
+
+
+
+
+
+  <!-- List -->
+  <div id="list" class="list-grid"></div>
+
+</div>
+
+<!-- DETAIL PANEL -->
+<div id="panel" class="panel">
+  <div class="panel-card">
+    <div class="panel-left">
+      <img id="panelImg" style="width:100%;height:100%;object-fit:cover">
+    </div>
+    <div class="panel-right">
+      <h2 id="panelTitle"></h2>
+      <div id="panelLoc" style="color:var(--muted)"></div>
+      <div id="panelPrice" style="margin-top:10px;color:var(--accent);font-weight:700;font-size:20px"></div>
+
+      <div id="panelTags" style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"></div>
+
+      <p id="panelDesc" style="margin-top:10px;line-height:1.6"></p>
+
+      <button id="bookNow"
+        style="margin-top:14px;padding:12px 18px;border:none;background:var(--accent);color:white;border-radius:10px;font-weight:600;">
+        Book Now
+      </button>
+
+      <button id="closePanel" style="margin-top:10px;padding:10px 16px;border-radius:10px;border:1px solid #ccc;background:white;">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const listings = [
+  {
+    id: 1,
+    title: 'Kos Premium Jakarta Selatan',
+    city: 'Jakarta',
+    type: 'kos',                 // <--- TAMBAHKAN INI
+    price: 3000000,
+    fac: ['wifi','ac'],
+    img: '/kosjakarta.jpg',
+    desc: 'Kos nyaman dekat stasiun.'
+  },
+  {
+    id: 2,
+    title: 'Apartemen SkyView Bandung',
+    city: 'Bandung',
+    type: 'apartemen',         // <--- TAMBAHKAN INI
+    price: 2500000,
+    fac: ['ac','parking'],
+    img: '/skyviewbandung.jpg',
+    desc: 'Apartemen modern view kota.'
+  },
+  {
+    id: 3,
+    title: 'Rumah Keluarga Bekasi',
+    city: 'Jakarta',
+    type: 'rumah',             // <--- TAMBAHKAN INI
+    price: 4500000,
+    fac: ['parking'],
+    img: '/rumah.jpg',
+    desc: 'Rumah besar cocok untuk keluarga.'
+  },
+  {
+    id: 4,
+    title: 'Studio Compact Surabaya',
+    city: 'Surabaya',
+    type: 'apartemen',         // <--- TERSERAH, bisa apartemen/studio
+    price: 1200000,
+    fac: ['wifi'],
+    img: '/studio.jpg',
+    desc: 'Studio kecil ekonomis.'
+  },
+  {
+    id: 5,
+    title: 'Villa Santai Bandung',
+    city: 'Bandung',
+    type: 'rumah',             
+    price: 7000000,
+    fac: ['pool','parking'],
+    img: '/villa.jpg',
+    desc: 'Villa dengan kolam pribadi.'
+  }
+];
+
+
+
+  function money(n){return "Rp " + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".")}
+
+  const listEl = document.getElementById("list");
+  const search = document.getElementById("search");
+  const price = document.getElementById("price");
+  const city = document.getElementById("city");
+
+  function renderGrid(arr){
+    listEl.innerHTML = "";
+    arr.forEach(item=>{
+      const div = document.createElement("div");
+      div.className="card";
+      div.innerHTML=`
+        <img src="${item.img}">
+        <div class="card-body">
+          <div style="font-weight:700">${item.title}</div>
+          <div style="color:var(--muted)">${item.city}</div>
+          <div style="margin-top:6px;color:var(--accent);font-weight:700">${money(item.price)}</div>
+        </div>`;
+      div.addEventListener("click", ()=>openPanel(item.id));
+      listEl.appendChild(div);
+    });
+  }
+
+ function filter(){
+  const q = search.value.toLowerCase();
+  const max = Number(price.value);
+  const c = city.value;
+  const t = type.value;
+
+  const f = listings.filter(x=>{
+    if (x.price > max) return false;
+    if (c !== "all" && x.city !== c) return false;
+    if (t !== "all" && x.type !== t) return false;
+    if (q && !x.title.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  renderGrid(f);
+}
+
+
+  // PANEL
+  const panel = document.getElementById("panel");
+  const panelImg = document.getElementById("panelImg");
+  const panelTitle = document.getElementById("panelTitle");
+  const panelLoc = document.getElementById("panelLoc");
+  const panelPrice = document.getElementById("panelPrice");
+  const panelTags = document.getElementById("panelTags");
+  const panelDesc = document.getElementById("panelDesc");
+  const bookNow = document.getElementById("bookNow");
+
+  function openPanel(id){
+    const x = listings.find(a=>a.id===id);
+    if(!x) return;
+
+    panelImg.src = x.img;
+    panelTitle.textContent = x.title;
+    panelLoc.textContent = x.city;
+    panelPrice.textContent = money(x.price);
+    panelDesc.textContent = x.desc;
+
+    panelTags.innerHTML = x.fac.map(f=>`<div class="tag">${f.toUpperCase()}</div>`).join("");
+
+    // CONNECT TO book.html
+    bookNow.onclick = () => {
+      location.href = `book.html?id=${id}`;
+    };
+
+    panel.classList.add("open");
+  }
+
+  document.getElementById("closePanel").addEventListener("click", ()=>{
+    panel.classList.remove("open");
+  });
+
+  
+
+  
+
+
+
+  // Listeners
+  search.addEventListener("input", filter);
+  price.addEventListener("input", filter);
+  city.addEventListener("change", filter);
+  document.getElementById("type").addEventListener("change", filter);
+
+  renderGrid(listings);
+</script>
+
+</body>
+</html>
+

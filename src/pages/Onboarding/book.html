@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking</title>
+
+  <!-- GOOGLE FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #eef2ff, #e0f2fe, #fae8ff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 15px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 850px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(18px);
+      padding: 35px;
+      border-radius: 22px;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.12);
+      animation: fadeSlide .5s ease;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-size: 30px;
+      font-weight: 700;
+      margin-top: 0;
+      color: #111;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .summary {
+      background: white;
+      padding: 18px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+      margin-bottom: 30px;
+    }
+
+    .summary h3 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2563eb;
+      margin: 10px 0;
+    }
+
+    label {
+      font-weight: 600;
+      color: #444;
+      margin-top: 10px;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      margin-top: 6px;
+      margin-bottom: 14px;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      font-size: 15px;
+      transition: .2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      border: none;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: .25s;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
+    }
+
+    /* Floating badge */
+    .tag-badge {
+      background: #2563eb15;
+      color: #2563eb;
+      padding: 8px 12px;
+      font-size: 13px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-right: 6px;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Booking Hunian Anda</h2>
+
+    <!-- Summary Properti -->
+    <div class="summary" id="property-summary">
+      <h3>Loading...</h3>
+      <p class="price"></p>
+      <p class="desc"></p>
+      <div id="tags"></div>
+    </div>
+
+    <!-- Form Booking -->
+    <form id="booking-form">
+      <label>Nama Lengkap</label>
+      <input type="text" placeholder="Masukkan nama lengkap" required>
+
+      <label>Email</label>
+      <input type="email" placeholder="Masukkan email" required>
+
+      <label>No. HP</label>
+      <input type="text" placeholder="0812xxxxxxx" required>
+
+      <label>Tanggal Masuk</label>
+      <input type="date" required>
+
+      <label>Durasi Sewa</label>
+      <select required>
+        <option value="">-- Pilih Durasi --</option>
+        <option value="1">1 Bulan</option>
+        <option value="3">3 Bulan</option>
+        <option value="6">6 Bulan</option>
+        <option value="12">1 Tahun</option>
+      </select>
+
+      <button type="submit" class="btn-primary">Lanjutkan Booking</button>
+    </form>
+  </div>
+
+  <script>
+    const properties = {
+      1: {
+        name: "Apartemen Jakarta",
+        price: "Rp 3.500.000 / bulan",
+        desc: "AC • Balkon • Wifi • Kamar mandi dalam",
+        tags: ["Dekat MRT", "Lingkungan Aman", "Akses Mudah"]
+      },
+      2: {
+        name: "Kos Bandung Premium",
+        price: "Rp 2.000.000 / bulan",
+        desc: "WiFi • Parkir • Dapur bersama",
+        tags: ["Area Strategis", "Bebas Banjir", "Akses 24 Jam"]
+      }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+
+    if (properties[id]) {
+      document.querySelector("#property-summary h3").textContent = properties[id].name;
+      document.querySelector("#property-summary .price").textContent = properties[id].price;
+      document.querySelector("#property-summary .desc").textContent = properties[id].desc;
+
+      document.querySelector("#tags").innerHTML =
+        properties[id].tags.map(t => `<span class='tag-badge'>${t}</span>`).join("");
+
+    } else {
+      document.querySelector("#property-summary h3").textContent = "Properti tidak ditemukan.";
+    }
+
+    document.querySelector("#booking-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Booking berhasil! Kamu akan diarahkan ke pembayaran.");
+    });
+  </script>
+
+</body>
+</html>
